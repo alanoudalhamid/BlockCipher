@@ -57,8 +57,8 @@ function encrypt(msg,key){
 	//second half
 	var half2 = enCaesar(s2,key);
 	half2 = enSubstitute(half2,key);
-	result = half2+half1;
 
+	var result = half2+half1;
 	for(var i=0; i<2; i++){
 		result = enSubstitute(result,key);
 		result = enCaesar(result,key);
@@ -67,22 +67,22 @@ function encrypt(msg,key){
 }
 
 function decrypt(msg,key){
-	var middle = Math.ceil(msg.length / 2);
-	var s1 = msg.substr(0, middle);
-	var s2 = msg.substr(middle);
-
-	var half1 = deSubstitute(s2,key);
-	half1 = enCaesar(half1,key);
-	//second half
-	var half2 = enCaesar(s1,key);
-	half2 = deSubstitute(half2,key);
-	result = half1+half2;
-
+	var result = msg;
 	for(var i=0; i<2; i++){
 		result = enCaesar(result,key);
 		result = deSubstitute(result,key);
 	}
+	var middle = Math.ceil(msg.length / 2);
+	var s1 = result.substr(0, middle);
+	var s2 = result.substr(middle);
 
+	var half1 = enCaesar(s2,key);
+		half1 = deSubstitute(half1,key);
+		//second half
+		var half2 = deSubstitute(s1,key);
+		half2 = enCaesar(half2,key);
+
+		result = half1+half2;
 	return result;
 }
 
@@ -90,12 +90,9 @@ function decrypt(msg,key){
 //=============================Encryption/Decryption Algorithms===================================
 //==============================================================================
 
-//=============Subsitution============
-//input str - string - to be encoded
-//input key - array - to be encoded by
-//return - encoded string
 function enSubstitute(str,key){
 	var result=str.split('');
+	key = key.split('');
 	for (var i = 0; i < result.length; i++) {
 		if (result[i].match(/^[a-z]*$/g) !== null) {
 			result[i]=key[result[i].charCodeAt(0) -97];
@@ -107,12 +104,9 @@ function enSubstitute(str,key){
 	return result.join('');
 }
 
-
-//input str - string - to be decoded
-//input key - array - to be decoded by
-//return - decoded string
 function deSubstitute(str,key){
-	result=str.split('');
+	var result=str.split('');
+	key = key.split('');
 	for (var i = 0; i < result.length; i++) {
 		if (result[i].match(/^[a-z]*$/g) !== null) {
 			result[i]=String.fromCharCode(key.indexOf(result[i])+97);
@@ -124,18 +118,12 @@ function deSubstitute(str,key){
 	return result.join('');
 }
 
-	//==========Ceaser Shift============
-	//shift a string's letters by x amount (Caesar Cipher)
-	//technically a cipher function, but I have it up here because it's not a cipher function for this cipher
-	//called in functions: @geneticSubstitutionCrack
 	function enCaesar(str,key) {
 		key = binarySum(key.charAt(0));
 		if(algorithm=="decryption")
 			key = 26-key;
-		//str - string to be encrypted
-		//shift - number 1 - 25 to shift letters to show encoded message
-		for (var i = 0, len = str.length; i < len; i++) { //for each char in string
-			for (var j = 0, len2 = key; j < len2; j++) { //increment one at a time (easier to loop at z)
+		for (var i = 0, len = str.length; i < len; i++) {
+			for (var j = 0, len2 = key; j < len2; j++) {
 				if (str[i].match(/^[a-yA-Y]*$/gi) !== null)
 					str = str.replaceAt(i, String.fromCharCode(str[i].charCodeAt(0) + 1));//increment char by 1
 
@@ -160,32 +148,3 @@ function binarySum(char) {
   }
 	return result;
 }
-
-/*function XOR(input,key) {
-	console.log("before: "+input);
-    var output = "";
-    var charCode;
-    for (var i = 0; i < input.length; i++) {
-        charCode = input.charCodeAt(i) ^ key[i % key.length].charCodeAt(0);
-
-    output += String.fromCharCode(charCode);
-    }
-		console.log("after: "+output/*.toString("10"));
-    return output;
-}
-
-
-//input arr - array - to be mutated
-//input amount - integer - amount to mutate by
-//return - array - mutated array
-function mutate(arr,amount) {
-	var newCopy = arr.slice(0);
-	for (var i = 0; i < amount; i++) {
-		var pos1=Math.floor(Math.random() * newCopy.length),
-			pos2=Math.floor(Math.random() * newCopy.length),
-			temp=newCopy[pos2];
-		newCopy[pos2]=newCopy[pos1];
-		newCopy[pos1]=temp;
-	}
-	return newCopy
-}*/
