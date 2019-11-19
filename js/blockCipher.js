@@ -48,15 +48,42 @@ function runAlgorithm(){
 
 
 function encrypt(msg,key){
-	var submsg = enSubstitute(msg,key);
-	var shiftmsg = enCaesar(submsg,key);
-	return shiftmsg;
+	var middle = Math.floor(msg.length / 2);
+	var s1 = msg.substr(0, middle);
+	var s2 = msg.substr(middle);
+//first half
+	var half1 = enSubstitute(s1,key);
+	half1 = enCaesar(half1,key);
+	//second half
+	var half2 = enCaesar(s2,key);
+	half2 = enSubstitute(half2,key);
+	result = half2+half1;
+
+	for(var i=0; i<2; i++){
+		result = enSubstitute(result,key);
+		result = enCaesar(result,key);
+	}
+	return result;
 }
 
 function decrypt(msg,key){
-	var deshiftmsg = enCaesar(msg,key);
-	var desmsg = deSubstitute(deshiftmsg,key);
-	return desmsg;
+	var middle = Math.ceil(msg.length / 2);
+	var s1 = msg.substr(0, middle);
+	var s2 = msg.substr(middle);
+
+	var half1 = deSubstitute(s2,key);
+	half1 = enCaesar(half1,key);
+	//second half
+	var half2 = enCaesar(s1,key);
+	half2 = deSubstitute(half2,key);
+	result = half1+half2;
+
+	for(var i=0; i<2; i++){
+		result = enCaesar(result,key);
+		result = deSubstitute(result,key);
+	}
+
+	return result;
 }
 
 //==============================================================================
@@ -134,6 +161,20 @@ function binarySum(char) {
 	return result;
 }
 
+/*function XOR(input,key) {
+	console.log("before: "+input);
+    var output = "";
+    var charCode;
+    for (var i = 0; i < input.length; i++) {
+        charCode = input.charCodeAt(i) ^ key[i % key.length].charCodeAt(0);
+
+    output += String.fromCharCode(charCode);
+    }
+		console.log("after: "+output/*.toString("10"));
+    return output;
+}
+
+
 //input arr - array - to be mutated
 //input amount - integer - amount to mutate by
 //return - array - mutated array
@@ -147,4 +188,4 @@ function mutate(arr,amount) {
 		newCopy[pos1]=temp;
 	}
 	return newCopy
-}
+}*/
