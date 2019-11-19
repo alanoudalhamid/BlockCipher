@@ -21,6 +21,13 @@
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!--===============================================================================================-->
+    <!--===============================================================================================-->
+    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <!--===============================================================================================-->
+    <script src="js/inputValidation.js"></script>
+    <!--===============================================================================================-->
+    <script src="js/blockCipher.js"></script>
 </head>
 
 <body>
@@ -40,7 +47,11 @@
 					</span>
 
                         <div class="wrap-input100 validate-input" data-validate="Please type in your message (letters and spaces only)">
-                            <textarea id="msgtextarea" class="input100" name="message" placeholder="Type your plain text here"></textarea>
+                            <textarea id="msgtextarea" class="input100" maxLength="512" name="message" placeholder="Type your plain text here..."></textarea>
+                            <span class="focus-input100"></span>
+                        </div>
+                        <div class="wrap-input100 validate-input" data-validate="Key must contain all the English alphabits">
+                            <input id="key" class="input100" name="key" maxLength="26" placeholder="Type your encryption key..."></textarea>
                             <span class="focus-input100"></span>
                         </div>
 
@@ -56,10 +67,6 @@
             </div>
         </div>
     </div>
-
-    <!--===============================================================================================-->
-    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-    <!--===============================================================================================-->
     <script src="vendor/bootstrap/js/popper.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <!--===============================================================================================-->
@@ -71,24 +78,34 @@
             scale: 1.1
         })
     </script>
-    <!--===============================================================================================-->
-    <script src="js/inputValidation.js"></script>
-    <!--===============================================================================================-->
-    <script src="js/blockCypher.js"></script>
+
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-
         function gtag() {
             dataLayer.push(arguments);
         }
         gtag('js', new Date());
-
         gtag('config', 'UA-23581568-13');
     </script>
+    <script>
 
+    $(document).ready(function() {
+      $("#runalgorithm").click(function(){
+        if(!validation()){
+          return;
+        }
+        runAlgorithm();
+      });
+
+      $("#reverse").click(function(){
+        switchAlgorithm();
+      });
+    });
+
+    </script>
 </body>
 
 </html>
